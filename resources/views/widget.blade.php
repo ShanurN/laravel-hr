@@ -65,7 +65,55 @@
         </form>
     </div>
 
+    <script>
+        document.getElementById('ticketForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const messageDiv = document.getElementById('message');
+            const submitBtn = form.querySelector('button[type="submit"]');
 
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Submitting...';
+            messageDiv.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/tickets', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    messageDiv.textContent = 'Ticket submitted successfully!';
+                    messageDiv.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                    messageDiv.classList.add('bg-green-100', 'text-green-700');
+                    form.reset();
+                } else {
+                    messageDiv.textContent = result.message || 'Error submitting ticket.';
+                    if (result.errors) {
+                        const errorMsg = Object.values(result.errors).flat().join(' ');
+                        messageDiv.textContent = errorMsg;
+                    }
+                    messageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                    messageDiv.classList.add('bg-red-100', 'text-red-700');
+                }
+            } catch (error) {
+                messageDiv.textContent = 'Network error. Please try again.';
+                messageDiv.classList.remove('hidden', 'bg-green-100', 'text-green-700');
+                messageDiv.classList.add('bg-red-100', 'text-red-700');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Submit Ticket';
+                messageDiv.classList.remove('hidden');
+            }
+        });
+    </script>
 </body>
 
 </html>
