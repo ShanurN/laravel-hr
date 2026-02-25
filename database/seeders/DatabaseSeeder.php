@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             'email' => 'manager@example.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
         ]);
-        $manager->assignRole('manager');
 
         $this->call([
             CustomerSeeder::class,
