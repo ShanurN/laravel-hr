@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Mini-CRM Ticket API
+  description: API for submitting support tickets and retrieving statistics.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+paths:
+  /tickets:
+    post:
+      summary: Submit a new support ticket
+      description: Creates a new ticket including customer creation if not exists. Supports file attachments.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john@example.com
+                phone:
+                  type: string
+                  description: E.164 format
+                  example: "+1234567890"
+                subject:
+                  type: string
+                  example: Technical Issue
+                text:
+                  type: string
+                  example: I cannot login to my account.
+                file:
+                  type: string
+                  format: binary
+              required:
+                - name
+                - email
+                - phone
+                - subject
+                - text
+      responses:
+        '201':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '422':
+          description: Validation error (e.g. rate limiting or invalid format)
+  /tickets/statistics:
+    get:
+      summary: Get ticket statistics
+      description: Returns counts of tickets grouped by status for a given period.
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [day, week, month]
+            default: day
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  period:
+                    type: string
+                  statistics:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                        count:
+                          type: integer
+components:
+  schemas:
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+            phone:
+              type: string
+        subject:
+          type: string
+        text:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              url:
+                type: string
