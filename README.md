@@ -14,7 +14,7 @@ A lightweight CRM system for collecting support tickets via a universal widget a
 ## Technical Stack
 - Laravel 12
 - PHP 8.4
-- SQLite (Local Development)
+- PostgreSQL
 - Tailwind CSS
 
 ## Quick Start (Local)
@@ -22,7 +22,8 @@ A lightweight CRM system for collecting support tickets via a universal widget a
 ### Prerequisites
 - PHP 8.4
 - Composer
-- SQLite
+- PostgreSQL
+- Docker (optional)
 
 ### Installation
 1. Clone the repository.
@@ -37,8 +38,7 @@ A lightweight CRM system for collecting support tickets via a universal widget a
    ```
 4. Setup database:
    ```bash
-   touch database/database.sqlite
-   # Make sure .env has DB_CONNECTION=sqlite
+   # Make sure .env has valid DB_CONNECTION=pgsql and credentials
    php artisan migrate:fresh --seed
    ```
 5. Run dev server:

@@ -8,14 +8,38 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/var/www/html
+      - .:/var/www
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
-      - DB_CONNECTION=sqlite
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=laravel_hr
+      - DB_USERNAME=laravel_hr
+      - DB_PASSWORD=laravel_hr
+    depends_on:
+      - db
+    networks:
+      - mini_crm_network
+
+  db:
+    image: postgres:17-alpine
+    container_name: mini_crm_db
+    environment:
+      - POSTGRES_DB=laravel_hr
+      - POSTGRES_USER=laravel_hr
+      - POSTGRES_PASSWORD=laravel_hr
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - mini_crm_network
 
 networks:
   mini_crm_network:
     driver: bridge
+
+volumes:
+  postgres_data:

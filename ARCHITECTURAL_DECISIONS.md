@@ -9,11 +9,11 @@ This document outlines the key architectural and technical decisions made during
 - **Reusable Logic**: Services encapsulate business processes (like ticket creation), allowing them to be reused by both the API and Web controllers (and potentially CLI/Jobs).
 - **Testability**: Logic in services is easier to unit test in isolation.
 
-## 2. Database: SQLite
-**Decision**: Using SQLite for local development and testing.
+## 2. Database: PostgreSQL
+**Decision**: Using PostgreSQL for the application database.
 **Rationale**: 
-- **Portability**: No need for a complex database server setup (like MySQL/Postgres) to run the project.
-- **Speed**: Extremely fast for running automated tests.
+- **Scalability**: Better suited for production-grade applications than SQLite.
+- **Advanced Features**: Support for advanced data types and concurrent connections.
 
 ## 3. Media Handling: Spatie MediaLibrary
 **Decision**: Use of `spatie/laravel-medialibrary` for file attachments.
