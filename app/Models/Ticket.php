@@ -11,6 +11,10 @@ class Ticket extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
+    protected $casts = [
+        'manager_response_date' => 'datetime',
+    ];
+    
     protected $fillable = [
         'customer_id',
         'subject',

@@ -15,18 +15,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::factory()->create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+        $this->call([
+            RoleSeeder::class,
         ]);
+
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            ]
+        );
         $admin->assignRole('admin');
 
-        $manager = User::factory()->create([
-            'name' => 'Manager User',
-            'email' => 'manager@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('password'),
-        ]);
+        $manager = User::updateOrCreate(
+            ['email' => 'manager@example.com'],
+            [
+                'name' => 'Manager User',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            ]
+        );
+        $manager->assignRole('manager');
 
         $this->call([
             CustomerSeeder::class,
